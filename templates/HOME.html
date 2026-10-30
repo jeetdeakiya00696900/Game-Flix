@@ -1,151 +1,113 @@
-<!DOCTYPE html>
-<html class="dark" lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>GameFlix - Discover Your Next Favorite Game</title>
+{% extends "base.html" %}
+{% block title %}GameFlix - Discover Your Next Favorite Game{% endblock %}
+{% block nav_home %}active{% endblock %}
+{% block mob_home %}active{% endblock %}
 
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+{% block content %}
+  <!-- HERO SECTION -->
+  <section class="relative flex h-[70vh] min-h-[520px] items-end overflow-hidden">
+    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+         style="background-image: url('https://images.igdb.com/igdb/image/upload/t_screenshot_huge/sceggbhkr7oitlplshpn.jpg')">
+    </div>
+    <div class="hero-gradient absolute inset-0"></div>
 
-  <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "primary": "#ea2a33",
-            "background-light": "#f8f6f6",
-            "background-dark": "#000000",
-          },
-          fontFamily: {
-            "display": ["Be Vietnam Pro", "sans-serif"]
-          },
-          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
-        }
-      }
-    }
-  </script>
-
-  <style type="text/tailwindcss">
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
-    }
-    .scrollbar-hide::-webkit-scrollbar { display: none; }
-  </style>
-</head>
-
-<body class="bg-background-dark font-display text-white">
-<div class="relative flex min-h-screen w-full flex-col">
-
-  <!-- HEADER -->
-  <header class="fixed top-0 left-0 right-0 z-50 flex h-16 items-center justify-between bg-gradient-to-b from-black/80 to-transparent px-4 sm:px-6 lg:px-10">
-    <div class="flex items-center gap-8">
-      <div class="flex items-center gap-2">
-        <svg class="size-6 text-primary" viewBox="0 0 48 48" fill="none">
-          <path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"/>
-        </svg>
-        <h1 class="text-2xl font-black tracking-tighter">GameFlix</h1>
+    <div class="relative z-10 w-full px-4 sm:px-6 lg:px-10 pb-12 max-w-7xl mx-auto">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="badge badge-new">
+          <span class="material-symbols-outlined text-xs mr-1" style="font-size:14px">local_fire_department</span>
+          Featured
+        </span>
       </div>
+      <h2 class="text-5xl sm:text-6xl lg:text-7xl font-black leading-none tracking-tight">Cyber Odyssey</h2>
+      <p class="mt-4 text-gray-300 max-w-lg text-base">Embark on a neon-drenched epic in a dystopian future. Fight, hack, and survive in the world's most dangerous city.</p>
 
-      <nav class="hidden md:flex items-center gap-6">
-        <a class="flex items-center gap-1 text-sm font-medium text-white hover:text-primary" href="#">
-          <span>Categories</span>
-          <span class="material-symbols-outlined">expand_more</span>
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <button onclick="openTrailerModal()" class="btn-primary">
+          <span class="material-symbols-outlined">play_arrow</span> Play Trailer
+        </button>
+        <a href="/search" class="btn-secondary">
+          <span class="material-symbols-outlined">explore</span> Browse Games
         </a>
-        <a class="text-sm font-medium text-gray-300 hover:text-primary" href="#">My Library</a>
-        <a class="text-sm font-medium text-gray-300 hover:text-primary" href="#">Store</a>
-        <a class="text-sm font-medium text-gray-300 hover:text-primary" href="FAV.html">Favorite</a>
-      </nav>
-    </div>
-
-    <div class="flex items-center gap-4">
-      <button onclick="window.location.href='SEARCH.html'"
-        class="flex h-10 w-10 rounded-full flex items-center justify-center text-gray-300
-        transition-all duration-300 hover:bg-white/10 hover:text-white active:scale-95">
-        <span class="material-symbols-outlined">search</span>
-      </button>
-
-      <div class="bg-center bg-cover rounded-full size-9 border-2 hover:border-primary transition-all"
-        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDzsZYarZmzxaennT6hYSILUlA_oELuQLquyMwzF9DK10XSUiMtcms72ITW-TciBaT1Vtj_rAjcRjNgyYhLykTsZO6bRCfujRoa8R5LTT889EIYI7kon5qLg_ATicWUi2vb5b9knVqZ4wZCf4dm7smAoaBFLgoFM6_eGmnbN48KncP6bn0Yv-5_ACRg9WPOV5CrNUDk3Qj1ej-8IItLjFdHJ8uEm1AKP_eN0g26-Ne19c-AV6Yvrw9xIpDL-LglbkpdLwFURrm40pg');">
       </div>
     </div>
-  </header>
+  </section>
 
-  <!-- MAIN -->
-  <main class="flex-1 pt-16">
+  <!-- TRAILER MODAL -->
+  <div id="trailer-modal" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/85 backdrop-blur-sm p-4">
+    <div class="relative w-full max-w-4xl rounded-2xl overflow-hidden bg-surface shadow-2xl">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-white/10">
+        <h3 class="font-bold text-lg">Cyber Odyssey — Official Trailer</h3>
+        <button onclick="closeTrailerModal()" class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-white/10 transition-colors text-gray-400 hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="aspect-video">
+        <iframe id="trailer-iframe" class="w-full h-full" src="" title="Game Trailer"
+                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
 
-    <!-- HERO -->
-    <section class="relative flex h-[65vh] min-h-[500px] w-full justify-end overflow-hidden">
-      <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgMXdvEyBIXBE5yP7f5OFA2HDskwOahwRv6Jnm7BdvUOvWgJMGXIUWTywYTmwV39XWTayyz6PCe8aZr6gs9Hlv0PnU9g-gIijTy5Xd5UBqEJCvMz7rGVAg8zM5I3Uf7QQ1B4FVqr-xDlEHpNpbkzpVXQ3ejD_fXXDUM_QcR3eOoy9YXvAFg0AmYizkZ9fn4lmWWuOeV8qM54iwGdFptu1pbee8dBK4QIi548iwi8jOJA6PGhdVKNUEhAz5LEA4Ur2q97M-8vbARcw');"></div>
-      <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/70 to-transparent"></div>
+  <!-- GAME ROWS -->
+  <div class="space-y-14 py-12 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto w-full">
 
-      <div class="relative z-10 mx-auto max-w-7xl px-4 pb-12">
-        <h2 class="text-6xl font-black">Cyber Odyssey</h2>
-        <p class="mt-4 text-gray-300">Embark on a neon-drenched epic journey.</p>
-
-        <div class="mt-8 flex gap-4">
-          <button onclick="openTrailer()"
-            class="h-12 min-w-40 rounded bg-primary px-6 font-bold flex items-center gap-2 hover:scale-105">
-            <span class="material-symbols-outlined">play_arrow</span> Play Trailer
-          </button>
-        </div>
+    <!-- Trending -->
+    <section>
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="section-title">🔥 Trending Now</h3>
+        <a href="/search?q=trending" class="text-sm text-gray-400 hover:text-primary transition-colors flex items-center gap-1">
+          See all <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+      </div>
+      <div id="trending-row" class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+        <!-- loaded by JS -->
       </div>
     </section>
 
-    <!-- TRAILER MODAL -->
-    <div id="trailerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80">
-      <div class="relative w-11/12 max-w-3xl">
-        <button onclick="closeTrailer()"
-          class="absolute top-2 right-2 text-white text-2xl font-bold z-50">×</button>
-        <iframe id="trailerVideo" width="100%" height="400" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0" title="Trailer" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <!-- New Releases -->
+    <section>
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="section-title">🆕 New Releases</h3>
+        <a href="/search?q=new" class="text-sm text-gray-400 hover:text-primary transition-colors flex items-center gap-1">
+          See all <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
       </div>
-    </div>
-
-    <!-- CAROUSELS -->
-    <section class="space-y-12 py-12">
-      <div>
-        <h3 class="text-2xl font-bold px-6 lg:px-10">Trending Games</h3>
-        <div id="trending-row" class="flex gap-4 overflow-x-auto px-6 lg:px-10 pb-4 scrollbar-hide"></div>
-      </div>
-      <div>
-        <h3 class="text-2xl font-bold px-6 lg:px-10">New Releases</h3>
-        <div id="new-row" class="flex gap-4 overflow-x-auto px-6 lg:px-10 pb-4 scrollbar-hide"></div>
-      </div>
-      <div>
-        <h3 class="text-2xl font-bold px-6 lg:px-10">Recommended For You</h3>
-        <div id="recommended-row" class="flex gap-4 overflow-x-auto px-6 lg:px-10 pb-4 scrollbar-hide"></div>
+      <div id="new-row" class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+        <!-- loaded by JS -->
       </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer class="mt-16 border-t border-white/10 py-10 bg-black/40 px-6 lg:px-10">
-      <p class="text-center text-gray-500 text-xs mt-10">© 2025 GameFlix. All rights reserved.</p>
-    </footer>
+    <!-- Recommended -->
+    <section>
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="section-title">👾 Recommended For You</h3>
+      </div>
+      <div id="recommended-row" class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+        <!-- loaded by JS -->
+      </div>
+    </section>
 
-  </main>
-</div>
+  </div>
+{% endblock %}
 
+{% block scripts %}
 <script>
-  function openTrailer() {
-    const modal = document.getElementById('trailerModal');
+  function openTrailerModal() {
+    const modal = document.getElementById('trailer-modal');
+    document.getElementById('trailer-iframe').src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1';
     modal.classList.remove('hidden');
-    const iframe = document.getElementById('trailerVideo');
-    iframe.src += "&autoplay=1";
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
   }
-
-  function closeTrailer() {
-    const modal = document.getElementById('trailerModal');
-    modal.classList.add('hidden');
-    const iframe = document.getElementById('trailerVideo');
-    iframe.src = iframe.src.replace("&autoplay=1", "");
+  function closeTrailerModal() {
+    document.getElementById('trailer-modal').classList.add('hidden');
+    document.getElementById('trailer-modal').classList.remove('flex');
+    document.getElementById('trailer-iframe').src = '';
+    document.body.style.overflow = '';
   }
+  document.getElementById('trailer-modal').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeTrailerModal();
+  });
 </script>
-
-<!-- HOME LOGIC -->
 <script src="/static/js/home.js"></script>
-</body>
-</html>
+{% endblock %}

@@ -342,22 +342,23 @@ def game_by_name():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Serve index / pages if using Flask templates
+# -------------------- PAGE ROUTES --------------------
+
 @app.route("/")
 def index():
-    return render_template("HOME.html")
+    return render_template("home.html")
 
-@app.route("/SEARCH.html")
+@app.route("/search")
 def search_page():
-    return render_template("SEARCH.html")
+    return render_template("search.html")
 
-@app.route("/G_DETAILS.html")
+@app.route("/game")
 def details_page():
-    return render_template("G_DETAILS.html")
+    return render_template("game_details.html")
 
-@app.route("/FAV.html")
+@app.route("/favorites")
 def fav_page():
-    return render_template("FAV.html")
+    return render_template("favorites.html")
 
 if __name__ == "__main__":
     # Pre-warm token

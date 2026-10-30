@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Game Details — GameFlix{% endblock %}
+
+{% block content %}
+<div id="page-loading" class="flex items-center justify-center min-h-[60vh]">
+  <div class="text-center">
+    <div class="spinner mx-auto mb-4"></div>
+    <p class="text-gray-400 text-sm">Loading game details…</p>
+  </div>
+</div>
+
+<div id="page-content" class="hidden">
+
+  <!-- HERO / BACKDROP -->
+  <section id="hero-section" class="relative w-full h-[55vh] min-h-[380px] bg-cover bg-center overflow-hidden">
+    <div class="hero-gradient absolute inset-0"></div>
+    <div class="absolute inset-0 bg-black/40"></div>
+  </section>
+
+  <!-- CONTENT -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pb-16 -mt-24 relative z-10">
+
+    <div class="flex flex-col lg:flex-row gap-8">
+
+      <!-- Cover art -->
+      <div class="shrink-0 lg:w-56">
+        <img id="cover-art" src="/static/images/placeholder.png" alt="Game cover"
+             class="w-40 lg:w-full rounded-xl shadow-2xl border border-white/10 object-cover aspect-[3/4]"
+             onerror="this.src='/static/images/placeholder.png'"/>
+      </div>
+
+      <!-- Game info -->
+      <div class="flex-1 min-w-0 pt-4 lg:pt-24">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+          <a href="/" class="hover:text-white transition-colors">Home</a>
+          <span class="material-symbols-outlined text-xs">chevron_right</span>
+          <a href="/search" class="hover:text-white transition-colors">Browse</a>
+          <span class="material-symbols-outlined text-xs">chevron_right</span>
+          <span id="breadcrumb-title" class="text-gray-300 truncate max-w-xs"></span>
+        </nav>
+
+        <h1 id="game-title" class="text-4xl sm:text-5xl font-black leading-tight tracking-tight mb-3"></h1>
+
+        <!-- Meta row -->
+        <div class="flex flex-wrap items-center gap-3 mb-4">
+          <div id="rating-badge" class="hidden items-center gap-1.5 rounded-full bg-yellow-500/15 px-3 py-1 text-sm font-bold text-yellow-400 border border-yellow-500/30">
+            <span class="material-symbols-outlined text-sm" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 700,'GRAD' 0,'opsz' 24">star</span>
+            <span id="rating-val"></span>
+          </div>
+          <span id="release-badge" class="hidden badge badge-genre"></span>
+        </div>
+
+        <!-- Genres -->
+        <div id="genres-wrap" class="flex flex-wrap gap-2 mb-5"></div>
+
+        <!-- Platforms -->
+        <p id="platforms-text" class="text-sm text-gray-400 mb-6"></p>
+
+        <!-- Action buttons -->
+        <div class="flex flex-wrap gap-3 mb-6">
+          <button id="fav-btn" class="fav-btn" title="Add to Favorites" aria-label="Toggle favorite">
+            <span class="material-symbols-outlined">favorite</span>
+          </button>
+          <button onclick="window.history.back()" class="btn-secondary text-sm py-2 px-4">
+            <span class="material-symbols-outlined">arrow_back</span> Back
+          </button>
+        </div>
+
+        <!-- Summary -->
+        <div id="summary-section">
+          <h3 class="text-lg font-bold mb-2 text-gray-100">About</h3>
+          <p id="summary-text" class="text-gray-400 leading-relaxed text-[15px]"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREENSHOTS -->
+    <section id="screenshots-section" class="mt-14 hidden">
+      <h3 class="section-title mb-4">Screenshots</h3>
+      <div id="screenshots-row" class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+      </div>
+    </section>
+
+    <!-- TRAILERS -->
+    <section id="videos-section" class="mt-14 hidden">
+      <h3 class="section-title mb-4">Trailers &amp; Videos</h3>
+      <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </section>
+
+    <!-- SIMILAR GAMES -->
+    <section id="similar-section" class="mt-14 hidden">
+      <h3 class="section-title mb-4">You Might Also Like</h3>
+      <div id="similar-row" class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide"></div>
+    </section>
+  </div>
+</div>
+
+<!-- ERROR STATE -->
+<div id="page-error" class="hidden flex-col items-center justify-center min-h-[60vh] text-center px-4">
+  <span class="material-symbols-outlined text-7xl text-red-800/60 mb-4">broken_image</span>
+  <h2 class="text-2xl font-bold mb-2">Game Not Found</h2>
+  <p class="text-gray-500 mb-6">We couldn't find details for this game. It may not exist in our database.</p>
+  <a href="/search" class="btn-primary">Browse Games</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/game_details.js"></script>
+{% endblock %}

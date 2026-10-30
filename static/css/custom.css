@@ -1,0 +1,166 @@
+/* ========== Base ========== */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Material icons */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  user-select: none;
+}
+
+/* ========== Navigation ========== */
+.nav-link {
+  @apply px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200;
+}
+.nav-link.active {
+  @apply text-white bg-white/10;
+}
+.mobile-nav-link {
+  @apply px-4 py-3 rounded-lg text-base font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200;
+}
+.mobile-nav-link.active {
+  @apply text-white bg-white/10;
+}
+
+/* ========== Game Cards ========== */
+.game-card {
+  @apply relative aspect-[3/4] w-44 sm:w-48 shrink-0 overflow-hidden rounded-xl cursor-pointer;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
+}
+.game-card:hover {
+  transform: scale(1.06) translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  z-index: 10;
+}
+.game-card img {
+  @apply h-full w-full object-cover;
+  transition: transform 0.3s ease;
+}
+.game-card:hover img {
+  transform: scale(1.04);
+}
+.game-card .card-overlay {
+  @apply absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent;
+}
+.game-card .card-info {
+  @apply absolute bottom-0 left-0 right-0 p-3 translate-y-1 transition-transform duration-300;
+}
+.game-card:hover .card-info {
+  transform: translateY(0);
+}
+
+/* ========== Scrollbar ========== */
+.scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-thin { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent; }
+.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 9999px; }
+
+/* ========== Skeleton / Loading ========== */
+.skeleton {
+  @apply rounded-xl bg-white/5;
+  animation: shimmer 1.6s infinite linear;
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ========== Spinner ========== */
+.spinner {
+  @apply inline-block rounded-full border-4 border-white/20 border-t-white;
+  animation: spin 0.8s linear infinite;
+  width: 36px; height: 36px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ========== Star Rating ========== */
+.star-fill { color: #FFD700; }
+
+/* ========== Badge ========== */
+.badge {
+  @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+}
+.badge-genre { @apply bg-white/10 text-gray-200; }
+.badge-rating { @apply bg-yellow-500/20 text-yellow-400; }
+.badge-new { @apply bg-primary/20 text-primary; }
+
+/* ========== Section Title ========== */
+.section-title {
+  @apply text-xl sm:text-2xl font-bold mb-4 flex items-center gap-2;
+}
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px; height: 1.4em;
+  background: #E50914;
+  border-radius: 2px;
+}
+
+/* ========== Hero ========== */
+.hero-gradient {
+  background: linear-gradient(to top, #000 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.2) 80%, transparent 100%);
+}
+
+/* ========== Buttons ========== */
+.btn-primary {
+  @apply flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-bold text-white;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-primary:hover { background: #b0070f; transform: scale(1.03); }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-secondary {
+  @apply flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-bold text-white;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.btn-secondary:hover { @apply bg-white/20 border-white/50; transform: scale(1.03); }
+.btn-secondary:active { transform: scale(0.97); }
+
+/* ========== Favorites Toggle ========== */
+.fav-btn { @apply flex h-10 w-10 items-center justify-center rounded-full bg-black/50 border border-white/30 text-white/70 transition-all duration-200; }
+.fav-btn:hover { @apply border-primary text-primary bg-primary/10; }
+.fav-btn.active { @apply border-primary text-primary bg-primary/20; }
+.fav-btn.active .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+/* ========== Search Input ========== */
+.search-input-wrap {
+  @apply flex items-center rounded-xl bg-surface-2 border border-white/10 h-14 px-4 gap-3;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.search-input-wrap:focus-within {
+  @apply border-primary;
+  box-shadow: 0 0 0 3px rgba(229,9,20,0.2);
+}
+.search-input-wrap input {
+  @apply flex-1 bg-transparent text-white placeholder:text-gray-500 outline-none text-base;
+}
+
+/* ========== Toast Notifications ========== */
+#toast-container {
+  @apply fixed bottom-6 right-6 z-[100] flex flex-col gap-3;
+}
+.toast {
+  @apply flex items-center gap-3 rounded-xl bg-surface-2 border border-white/10 px-4 py-3 shadow-2xl text-sm font-medium;
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+  min-width: 240px;
+}
+.toast-success { @apply border-green-500/40 text-green-400; }
+.toast-error { @apply border-primary/40 text-red-400; }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateX(20px); } }
+
+/* ========== Responsive grid for search ========== */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  .games-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .games-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+}

@@ -1,76 +1,97 @@
-// document.addEventListener("DOMContentLoaded", () => {
-//     initSearch();
-// });
+// ============================================================
+// GameFlix - Search Page Logic
+// ============================================================
 
-// async function initSearch() {
-//     const input = document.getElementById("searchInput");
-//     input.addEventListener("input", () => {
-//         const q = input.value.trim();
-//         if (q.length >= 2) performSearch(q);
-//     });
-//     input.addEventListener("keypress", e => {
-//         if (e.key === "Enter") performSearch(input.value.trim());
-//     });
-// }
+const searchInput = document.getElementById("search-input");
+const clearBtn = document.getElementById("clear-btn");
+const resultsTitle = document.getElementById("results-title");
+const resultsCount = document.getElementById("results-count");
 
-// // Use exactly the same buildCardHTML as home.js
-// function buildCardHTML(game) {
-//     const genres = game.genres?.join(", ") || "";
-//     const cover = game.cover || "/static/placeholder-game.png";
-//     const title = escapeHtml(game.title || game.name || "Untitled");
+const stateDefault  = document.getElementById("state-default");
+const stateLoading  = document.getElementById("state-loading");
+const stateEmpty    = document.getElementById("state-empty");
+const stateError    = document.getElementById("state-error");
+const resultsGrid   = document.getElementById("results-grid");
 
-//     return `
-//     <div class="group relative aspect-[3/4] w-52 shrink-0 snap-start overflow-hidden rounded-lg 
-//         transition-transform duration-300 ease-in-out hover:scale-105 hover:z-10 cursor-pointer" 
-//         data-name="${encodeURIComponent(title)}">
-        
-//         <img class="h-full w-full object-cover" src="${cover}" 
-//             alt="${title}" onerror="this.src='/static/placeholder-game.png'"/>
-        
-//         <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-        
-//         <div class="absolute bottom-0 left-0 right-0 p-3">
-//             <h4 class="font-bold text-white truncate">${title}</h4>
-//             <p class="text-xs text-gray-300 truncate">${genres}</p>
-//         </div>
-//     </div>
-//     `;
-// }
+let lastQuery = "";
 
-// async function performSearch(query) {
-//     const container = document.getElementById("resultsGrid");
-//     container.innerHTML = ""; // clear previous results
-//     try {
-//         const res = await fetch(`/api/search_game?q=${encodeURIComponent(query)}`);
-//         const data = await res.json();
-//         if (!data.results?.length) {
-//             container.innerHTML = `<div class="p-4 text-gray-400">No results found for "${query}"</div>`;
-//             return;
-//         }
-//         container.innerHTML = data.results.map(buildCardHTML).join("");
-//         attachCardClicks(container);
-//     } catch (err) {
-//         console.error("Search error:", err);
-//         container.innerHTML = `<div class="p-4 text-gray-400">Failed to search. Try again.</div>`;
-//     }
-// }
+// States
+function showState(state) {
+  [stateDefault, stateLoading, stateEmpty, stateError, resultsGrid].forEach(el => el.classList.add("hidden"));
+  if (state) state.classList.remove("hidden");
+}
 
-// // Same as home.js
-// function attachCardClicks(container) {
-//     container.querySelectorAll("[data-name]").forEach(card => {
-//         card.addEventListener("click", () => {
-//             const name = card.getAttribute("data-name");
-//             if (name) {
-//                 window.location.href = `G_DETAILS.html?name=${name}`;
-//             }
-//         });
-//     });
-// }
+// Search
+async function performSearch(q) {
+  q = q.trim();
+  if (!q || q.length < 2) { showState(stateDefault); resultsTitle.textContent = ""; resultsCount.textContent = ""; return; }
+  lastQuery = q;
+  showState(stateLoading);
+  stateLoading.innerHTML = buildSkeletons(12);
+  resultsTitle.textContent = `Searching for "${q}"…`;
+  resultsCount.textContent = "";
 
-// function escapeHtml(s) {
-//     if (!s) return "";
-//     return s.replace(/[&<>"'`=\/]/g, c => ({
-//         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;',
-//         "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;'
-//     })[c]);
-// }
+  try {
+    const res = await fetch(`/api/search_game?q=${encodeURIComponent(q)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    const games = data.results || [];
+
+    if (!games.length) {
+      showState(stateEmpty);
+      document.getElementById("no-results-msg").textContent = `No results found for "${q}". Try a different search.`;
+      resultsTitle.textContent = "";
+      resultsCount.textContent = "";
+      return;
+    }
+
+    resultsGrid.innerHTML = games.map(g => buildGameCard(g)).join("");
+    resultsTitle.textContent = `Results for "${q}"`;
+    resultsCount.textContent = `${games.length} games found`;
+    showState(resultsGrid);
+  } catch (err) {
+    console.error("Search error:", err);
+    showState(stateError);
+    resultsTitle.textContent = "";
+  }
+}
+
+function retrySearch() { performSearch(lastQuery); }
+
+// Debounced input
+const debouncedSearch = debounce(performSearch, 380);
+
+searchInput.addEventListener("input", () => {
+  const v = searchInput.value;
+  clearBtn.classList.toggle("hidden", !v);
+  debouncedSearch(v);
+});
+
+searchInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") performSearch(searchInput.value);
+  if (e.key === "Escape") { searchInput.value = ""; clearBtn.classList.add("hidden"); showState(stateDefault); }
+});
+
+clearBtn.addEventListener("click", () => {
+  searchInput.value = "";
+  clearBtn.classList.add("hidden");
+  showState(stateDefault);
+  resultsTitle.textContent = "";
+  resultsCount.textContent = "";
+  searchInput.focus();
+});
+
+// Quick tags
+document.querySelectorAll(".quick-tag").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const q = btn.dataset.q;
+    searchInput.value = q;
+    clearBtn.classList.remove("hidden");
+    performSearch(q);
+  });
+});
+
+// URL param (from external links)
+const urlQ = new URLSearchParams(location.search).get("q");
+if (urlQ) { searchInput.value = urlQ; clearBtn.classList.remove("hidden"); performSearch(urlQ); }
